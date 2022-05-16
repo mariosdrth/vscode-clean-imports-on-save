@@ -44,6 +44,15 @@
 			}
 		}
 	},
+	"icon": "images/icon_small.png",
+	"homepage": "https://github.com/mariosdrth/vscode-clean-imports-on-save#readme",
+	"bugs": {
+		"url": "https://github.com/mariosdrth/vscode-clean-imports-on-save/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mariosdrth/vscode-clean-imports-on-save.git"
+	  },
 	"galleryBanner": {
 		"color": "#1B1B1B",
 		"theme": "dark"
