@@ -76,7 +76,7 @@ suite('Clean Up Imports Test Suite', () => {
 	});
 
 	it('should remove multiple unused imports and clean hanging commas or empty lines', () => {
-		const code: string = 'import {window, other} from "vscode";\r\nimport {one} from "test";\r\nimport {two, three} from "test2";\r\nimport  {\r\n    four,\r\n    five\r\n} from "test3";\r\n\r\nexport function jsFn() {\r\n    window.test;\r\n    other.test;\r\n}\r\n\r\nexport const jsConst = "1";\r\n\r\nexport class Test {\r\n}\r\n\r\nconst test2 = 2;';
+		const code: string = 'import {window, other, unused, unused2} from "vscode";\r\nimport {one} from "test";\r\nimport {two, three} from "test2";\r\nimport  {\r\n    four,\r\n    five\r\n} from "test3";\r\n\r\nexport function jsFn() {\r\n    window.test;\r\n    other.test;\r\n}\r\n\r\nexport const jsConst = "1";\r\n\r\nexport class Test {\r\n}\r\n\r\nconst test2 = 2;';
 		const codeClean: string = 'import {window, other} from "vscode";\r\n\r\nexport function jsFn() {\r\n    window.test;\r\n    other.test;\r\n}\r\n\r\nexport const jsConst = "1";\r\n\r\nexport class Test {\r\n}\r\n\r\nconst test2 = 2;';
 
 		assert.strictEqual(codeClean, removeUnusedAndFormatImports(code));

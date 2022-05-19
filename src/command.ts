@@ -80,8 +80,9 @@ export const removeUnusedAndFormatImports: (code: string, eol?: EndOfLine) => st
 
     // Clean up empty spaces, empty lines, "hanging" commas after the removal of unused imports
     importStatementsReformed = importStatementsReformed
-                                .replace(new RegExp(`, \\B|\\B, |^\\s+,${endOfLineCharacter}`, "gm"), "")
-                                .replace(new RegExp(`\\s*,${endOfLineCharacter}\\s+}`, "gm"), `${endOfLineCharacter}}`)
+                                .replace(new RegExp(`\\B, |^\\s+,${endOfLineCharacter}`, "gm"), "")
+                                .replace(new RegExp(`\\s*,${endOfLineCharacter}\\s*}`, "gm"), `${endOfLineCharacter}}`)
+                                .replace(new RegExp(`,\\s*[^${endOfLineCharacter}]}|,}`, "gm"), `}`)
                                 .replace(new RegExp(`import.*?{[, ${endOfLineCharacter}]*?}.*?;`, "gm"), "")
                                 .replace(new RegExp("import\\s+from\\s+.*;", "gm"), "")
                                 .replace(new RegExp(`^(?:[\\t ]*(?:${endOfLineCharacter}))+`, "gm"), "");
