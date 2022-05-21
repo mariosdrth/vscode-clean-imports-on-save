@@ -2,7 +2,8 @@
 
 ## Description
 
-VS Code extension to clean the imports of JavaScript and TypeScript files (`.js`, `.jsx`, `.ts` and `.tsx`). The main difference with the "Organize Imports" of VS Code is that it doesn't re-sort the imports or adds spaces before and after the curly braces. The extension is triggered by default on saving (configurable in the extension settings) or by the Command Palette (a keybinding can be assigned there with the cog icon).
+VS Code extension to clean the imports of JavaScript and TypeScript files (`.js`, `.jsx`, `.ts` and `.tsx`). The main difference with the "Organize Imports" of VS Code is that it doesn't re-sort the imports or adds spaces before and after the curly braces. Also, all file formatting (whitespace, indentation etc) remains untouched.
+<br/>The extension is triggered by default on saving (configurable in the extension settings) or by the Command Palette (a keybinding can be assigned there with the cog icon).
 
 ![Clean Imports](images/clean_imports.gif)
 
