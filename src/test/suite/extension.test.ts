@@ -102,4 +102,8 @@ suite('Clean Up Imports Test Suite', () => {
 
 		assert.strictEqual(codeClean, removeUnusedAndFormatImports(code));
 	});
+
+	it('should work on empty file', () => {
+		assert.strictEqual('', removeUnusedAndFormatImports(''));
+	});
 });
