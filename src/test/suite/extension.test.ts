@@ -48,8 +48,8 @@ suite('Clean Up Imports Test Suite', () => {
 	});
 
 	it('should remove import when referenced in the code only in comments', () => {
-		const code: string = 'import {window, unused} from "vscode";\r\n\r\nexport function jsFn() {window.test;\r\n//unused.test;}';
-		const codeClean: string = 'import {window} from "vscode";\r\n\r\nexport function jsFn() {window.test;\r\n//unused.test;}';
+		const code: string = 'import {window, unused} from "vscode";\r\n\r\nexport function jsFn() {window.test;\r\n//unused.test;\r\n}';
+		const codeClean: string = 'import {window} from "vscode";\r\n\r\nexport function jsFn() {window.test;\r\n//unused.test;\r\n}';
 
 		assert.strictEqual(codeClean, removeUnusedAndFormatImports(code));
 	});
@@ -87,5 +87,19 @@ suite('Clean Up Imports Test Suite', () => {
 		const codeClean: string = 'import {window, other} from "vscode";\nimport {two} from "../../test2";\nimport {\n    four,\n    five\n} from "test3";\n\nexport function jsFn() {\n    window.test;\n    other.test;\n    two.test;\n    four.test;\n    five.test;\n}\n\nexport const jsConst = "1";\n\nexport class Test {\n}\n\nconst test2 = 2;';
 
 		assert.strictEqual(codeClean, removeUnusedAndFormatImports(code, EndOfLine.LF));
+	});
+
+	it('should remove import if only mentioned in a string literal', () => {
+		const code: string = 'import {window, unused} from "vscode";\r\n\r\nexport function jsFn() {\r\n  "This is a string containing window";\r\n}';
+		const codeClean: string = '\r\nexport function jsFn() {\r\n  "This is a string containing window";\r\n}';
+
+		assert.strictEqual(codeClean, removeUnusedAndFormatImports(code));
+	});
+
+	it('should remove import if only mentioned in a string literal (multi-line string)', () => {
+		const code: string = 'import {window, unused} from "vscode";\r\n\r\nexport function jsFn() {\r\n  `This is a multi-line string containing \r\nwindow`;\r\n}';
+		const codeClean: string = '\r\nexport function jsFn() {\r\n  `This is a multi-line string containing \r\nwindow`;\r\n}';
+
+		assert.strictEqual(codeClean, removeUnusedAndFormatImports(code));
 	});
 });
