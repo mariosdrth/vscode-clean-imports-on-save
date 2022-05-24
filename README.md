@@ -25,8 +25,9 @@ The command can also be separately triggered from the Command Palette. The comma
 
 ## Limitations
 
-When activating "Save All" with VS Code only editors in a dirty state are saved, not the currently open editor (if not dirty). This means if an editor with unused imports is open with no pending changes then the extension will not be triggered.
-<br/>Saving an editor directly on the other hand always triggers the save event on the open editor so the extension will be triggered (if enabled).
+- When activating "Save All" with VS Code only editors in a dirty state are saved, not the currently open editor (if not dirty). This means if an editor with unused imports is open with no pending changes then the extension will not be triggered
+- Saving an editor directly on the other hand always triggers the save event on the open editor so the extension will be triggered (if enabled)
+- The extension keeps tracked of the "visited" editors (since there's no way currently to get them from the api). This means that if some files are open with pending changed, VS Code is closed and re-opened and "Save All" is triggered then these files will not be formatted
 
 ## License
 
