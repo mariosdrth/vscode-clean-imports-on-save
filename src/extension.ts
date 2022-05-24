@@ -1,4 +1,3 @@
-
 import {commands, ExtensionContext, TextDocumentWillSaveEvent, TextEditor, TextEditorSelectionChangeEvent, window, workspace} from 'vscode';
 import {ActiveTextEditorsProvider, cleanImports} from './command';
 
