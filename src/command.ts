@@ -74,7 +74,7 @@ export const removeUnusedAndFormatImports: (code: string, eol?: EndOfLine) => st
     }
 
     // Split editor content to imports and "actual" code
-    const matches: RegExpMatchArray[] = [...code.matchAll(new RegExp(`.*import(?:["'\\s]*([\\w*{}\\t${endOfLineCharacter}, ]+)from\\s*)?["'\\s]*([@\\w./_-]+)["'\\s].*`, 'gmi'))];
+    const matches: RegExpMatchArray[] = [...code.matchAll(new RegExp(`.*import(?:["'\\s]*([\\w*!@#$%^&_{}\\t${endOfLineCharacter}, ]+)from\\s*)?["'\\s]*([@\\w./_-]+)["'\\s].*`, 'gmi'))];
     let importStatementsInitial: string = matches.map(i => i[0]).join(endOfLineCharacter);
     const pureCode: string = code.replace(importStatementsInitial, '');
     importStatementsInitial = importStatementsInitial + endOfLineCharacter;
@@ -95,7 +95,8 @@ export const removeUnusedAndFormatImports: (code: string, eol?: EndOfLine) => st
                                 .replace(new RegExp(`\\s*,${endOfLineCharacter}\\s*}`, 'gm'), `${endOfLineCharacter}}`)
                                 .replace(new RegExp(`,\\s*[^${endOfLineCharacter}]}|,}`, 'gm'), `}`)
                                 .replace(new RegExp(`import.*?{[, ${endOfLineCharacter}]*?}.*?;`, 'gm'), '')
-                                .replace(new RegExp('import\\s*\\*\\s*as\\s*from\\s+.*;', 'gm'), '')
+                                .replace(new RegExp('import\\s*\\*\\s*as\\s*from\\s*.*', 'gm'), '')
+                                .replace(new RegExp('import\\s*\\s*from\\s*.*', 'gm'), '')
                                 .replace(new RegExp(`^(?:[\\t ]*(?:${endOfLineCharacter}))+`, 'gm'), '');
     
     return code.replace(importStatementsInitial, importStatementsReformed);
