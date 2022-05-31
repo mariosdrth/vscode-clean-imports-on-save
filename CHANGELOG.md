@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.1.2]
+
+- Support tsx when parsing with babel
+
 ## [1.1.1]
 
 - Fix bug with special characters
