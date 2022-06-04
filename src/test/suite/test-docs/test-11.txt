@@ -1,0 +1,19 @@
+import {window, other, unused, unused2} from "vscode";
+import {one} from "test";
+import {two, three} from "test2";
+import  {
+    four,
+    five
+} from "test3";
+
+export function jsFn() {
+    window.test;
+    other.test;
+}
+
+export const jsConst = "1";
+
+export class Test {
+}
+
+const test2 = 2;

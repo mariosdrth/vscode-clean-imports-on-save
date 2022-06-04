@@ -1,4 +1,4 @@
-import {EndOfLine, Range, TextDocumentWillSaveEvent, TextEditor, window, workspace, WorkspaceConfiguration, WorkspaceEdit} from 'vscode';
+import {EndOfLine, Position, Range, TextDocument, TextDocumentWillSaveEvent, TextEditor, window, workspace, WorkspaceConfiguration, WorkspaceEdit} from 'vscode';
 import {NodePath, ParseResult, parseSync, traverse, types} from '@babel/core';
 
 export class ActiveTextEditorsProvider {
@@ -47,7 +47,7 @@ export const cleanImports: (ignoreSettings: boolean, activeTextEditorsProvider?:
 
 export const updateEditorContent: (editor: TextEditor) => Promise<void> = async (editor) => {
     const maxRange: Range = new Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
-    const code: string = removeUnusedAndFormatImports(editor.document.getText(), editor.document.eol);
+    const code: string = removeUnusedAndFormatImports(editor.document, editor.document.eol);
 
     // If the contents of the editor are the same just return and continue the save operation
     if (code.length === 0) {
@@ -60,11 +60,14 @@ export const updateEditorContent: (editor: TextEditor) => Promise<void> = async 
     editor.document.save();
 };
 
-export const removeUnusedAndFormatImports: (code: string, eol?: EndOfLine) => string = (code, eol) => {
-    const unusedImports: string[] = getUnusedImports(code);
+export const removeUnusedAndFormatImports: (document: TextDocument, eol?: EndOfLine) => string = (document, eol) => {
+    const code: string = document.getText();
+    const unusedImports: string[] = getUnusedImports(code)[0];
+    const importLines: Set<number> = getUnusedImports(code)[1];
+    const lastLine: number | undefined = Array.from(importLines).sort((a, b) => a - b).pop();
 
     // If no unused imports found return
-    if (!unusedImports || unusedImports.length === 0) {
+    if (!unusedImports || unusedImports.length === 0 || !lastLine) {
         return '';
     }
 
@@ -74,10 +77,8 @@ export const removeUnusedAndFormatImports: (code: string, eol?: EndOfLine) => st
     }
 
     // Split editor content to imports and "actual" code
-    const matches: RegExpMatchArray[] = [...code.matchAll(new RegExp(`.*import(?:["'\\s]*([\\w*!@#$%^&_{}\\t${endOfLineCharacter}, ]+)from\\s*)?["'\\s]*([@\\w./_-]+)["'\\s].*`, 'gmi'))];
-    let importStatementsInitial: string = matches.map(i => i[0]).join(endOfLineCharacter);
+    let importStatementsInitial: string = document.getText(new Range(new Position(0, 0), new Position(lastLine, lastLine)));
     const pureCode: string = code.replace(importStatementsInitial, '');
-    importStatementsInitial = importStatementsInitial + endOfLineCharacter;
     let importStatementsReformed: string = importStatementsInitial;
 
     // If no "actual" code found return
@@ -86,7 +87,12 @@ export const removeUnusedAndFormatImports: (code: string, eol?: EndOfLine) => st
     }
 
     unusedImports.forEach(_import => {
-        importStatementsReformed = importStatementsReformed.replace(_import.replace('* as', ''), '');
+        if (importStatementsReformed.includes(`* as ${_import}`)) {
+            importStatementsReformed = importStatementsReformed.replace(`* as ${_import}`, '');
+        } else {
+            const repl: RegExp = new RegExp(`({[a-z,\\s]*\\s*)${_import}`);
+            importStatementsReformed = importStatementsReformed.replace(repl, '$1');
+        }
     });
 
     // Clean up empty spaces, empty lines, "hanging" commas after the removal of unused imports
@@ -102,8 +108,9 @@ export const removeUnusedAndFormatImports: (code: string, eol?: EndOfLine) => st
     return code.replace(importStatementsInitial, importStatementsReformed);
 };
 
-const getUnusedImports: (code: string) => string[] = (code) => {
+const getUnusedImports: (code: string) => [string[], Set<number>] = (code) => {
     const unusedImports: string[] = [];
+    const importLines: Set<number> = new Set();
 
     const ast: ParseResult | null = parseSync(code, {
         plugins: [
@@ -121,9 +128,13 @@ const getUnusedImports: (code: string) => string[] = (code) => {
                 if (!path.scope.bindings[specifier.local.name].referenced) {
                     unusedImports.push(specifier.local.name);
                 }
+                if (specifier.local.loc) {
+                    importLines.add(specifier.local.loc.start.line);
+                    importLines.add(specifier.local.loc.end.line);
+                }
             });
         }
     });
 
-    return unusedImports;
+    return [unusedImports, importLines];
 };

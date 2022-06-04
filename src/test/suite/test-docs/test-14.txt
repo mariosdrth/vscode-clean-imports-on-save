@@ -1,0 +1,6 @@
+import {window, unused} from "vscode";
+
+export function jsFn() {
+  `This is a multi-line string containing 
+window`;
+}

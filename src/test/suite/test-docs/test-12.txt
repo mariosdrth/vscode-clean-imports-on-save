@@ -1,0 +1,24 @@
+import * as React from "react";
+import {unused2, window, other, unused} from "vscode";
+import {one} from "test";
+import {two, three} from "../../test2";
+import {
+    four,
+    five,
+    six
+} from "test3";
+
+export function jsFn() {
+    window.test;
+    other.test;
+    two.test;
+    four.test;
+    five.test;
+}
+
+export const jsConst = "1";
+
+export class Test {
+}
+
+const test2 = 2;

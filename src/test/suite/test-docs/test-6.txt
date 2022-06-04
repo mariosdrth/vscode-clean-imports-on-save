@@ -1,0 +1,3 @@
+import {unused2, window, unused} from "vscode";
+
+export function jsFn() {window.test;}

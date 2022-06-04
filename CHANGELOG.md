@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.0.0]
+
+- Change the logic of getting the imports and the code to use babel instead of regex
+
 ## [1.1.2]
 
 - Support tsx when parsing with babel
