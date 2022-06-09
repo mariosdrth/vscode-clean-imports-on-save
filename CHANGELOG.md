@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.0.1]
+
+- Fix bug where unused import was ignored when cleaning up in one case
+
 ## [2.0.0]
 
 - Change the logic of getting the imports and the code to use babel instead of regex

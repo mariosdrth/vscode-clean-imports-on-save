@@ -90,7 +90,7 @@ export const removeUnusedAndFormatImports: (document: TextDocument, eol?: EndOfL
         if (importStatementsReformed.includes(`* as ${_import}`)) {
             importStatementsReformed = importStatementsReformed.replace(`* as ${_import}`, '');
         } else {
-            const repl: RegExp = new RegExp(`({[a-z,\\s]*\\s*)${_import}`);
+            const repl: RegExp = new RegExp(`({[a-z,\\s]*\\s*)*${_import}`);
             importStatementsReformed = importStatementsReformed.replace(repl, '$1');
         }
     });
